@@ -11,7 +11,19 @@ const GrupoSchema = Schema({
     },
     proyectodes: {
         type: String
-    }
+    },
+    asignatura: {
+        type: Schema.Types.ObjectId,
+        ref: 'Asignatura',
+        require: true
+    },
+    alumnos: [{
+        usuario: {
+            type: Schema.Types.ObjectId,
+            ref: 'Usuario',
+            require: true
+        }
+    }]
 }, { collection: 'grupos' });
 
 GrupoSchema.method('toJSON', function() {

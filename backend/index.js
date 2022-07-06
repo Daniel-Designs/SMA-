@@ -20,6 +20,12 @@ app.use(cors());
 app.use('/api/usuarios', require('./routes/usuarios'));
 app.use('/api/login', require('./routes/auth'));
 app.use('/api/grupos', require('./routes/grupos'));
+app.use('/api/cursos', require('./routes/cursos'));
+app.use('/api/asignaturas', require('./routes/asignaturas'));
+app.use('/api/evaluacion', require('./routes/evaluacion'));
+app.use('/api/rubrica', require('./routes/rubrica'));
+app.use('/api/semana',require('./routes/semanas'))
+
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en el puerto ' + process.env.PORT);

@@ -10,7 +10,11 @@ const { validarJWT } = require('../middleware/validarJWT');
 
 const router = Router();
 
-router.get('/', validarJWT, obtenerGrupos);
+router.get('/',[
+        check('id', 'El id del asignatura debe ser válido').optional().isMongoId(),
+        check('desde', 'El desde debe ser un número').optional().isNumeric(), 
+        validarJWT], obtenerGrupos);
+
 router.post('/', [
     validarJWT,
     check('nombre', 'El argumento nombre es obligatorio').not().isEmpty(),
