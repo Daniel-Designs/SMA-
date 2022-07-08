@@ -2,6 +2,7 @@ const {response} = require('express')
 const {generarJWT} = require('../helpers/jwt')
 const Usuario = require('../models/usuarios')
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 
 const login = async(req, res=response) => {
@@ -31,6 +32,8 @@ const login = async(req, res=response) => {
          res.json({
             ok: true,
             msg: 'Correcto Login',
+            uid:usuarioBD._id,
+            rol:usuarioBD.rol,
             token
         });
 
@@ -46,5 +49,36 @@ const login = async(req, res=response) => {
    
 }
 
+const token = async(req, res = response)=>{
+   
+    try {
+        const token = req.headers['x-token'];
+        const { uid, rol, ...object } = jwt.verify(token, process.env.JWT);
+        
+        const usuarioBD = await Usuario.findById(uid);
+        if (!usuarioBD) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Token no valido1',
+                token: ''
+            });
+        }
+        const nuevotoken = await generarJWT(uid,rol);
+            return res.json({
+            ok: true,
+            msg: 'token validado',
+            uid,
+            rol,
+            token: nuevotoken
+        }); 
+    } catch (error) {
+        console.log(error);
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Error token no valido2',
+                    token: ''
+                });
+    }
+}
 
-module.exports = {login}
+module.exports = {login,token}
