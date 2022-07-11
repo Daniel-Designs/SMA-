@@ -41,11 +41,23 @@ export class LoginComponent implements OnInit {
     this.waiting = true;
     this.usuarioService.login( this.loginForm.value)
     .subscribe( (res: any) =>{
-      console.log('respuesta al subcrib', res)
-      console.log(res.token)
-      //localStorage.setItem('token', res.token);
-      //localStorage.setItem('email', this.loginForm.get('email'));
-      this.router.navigateByUrl('/dashboard');
+      if (this.loginForm.get('remember').value) {
+        localStorage.setItem('email', this.loginForm.get('email').value);
+      } else {
+        localStorage.removeItem('email');
+      }
+      this.waiting = false;
+      switch (this.usuarioService.rol) {
+        case 'ADMINISTRADOR':
+          this.router.navigateByUrl('/admin/dashboard');
+          break;
+        case 'ALUMNO':
+          this.router.navigateByUrl('/alu/dashboard');
+          break;
+        case 'PROFESOR':
+          this.router.navigateByUrl('/prof/dashboard');
+          break;
+      }
    
     }, (err) => {
       console.warn('Error respueta api:',err);

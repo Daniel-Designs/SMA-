@@ -19,7 +19,7 @@ export class NoauthGuard implements CanActivate {
               .pipe(
                 tap( resp => {
                   if (!resp) {
-                    this.router.navigateByUrl('/dashboard');
+                    this.router.navigateByUrl('/admin');
                   }
                 })
               );

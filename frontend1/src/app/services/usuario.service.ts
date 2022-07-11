@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { tap, map, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import {Usuario} from '../models/usuario.model'
 
 
 @Injectable({
@@ -12,8 +13,10 @@ import { Router } from '@angular/router';
 })
 export class UsuarioService {
 
+  private usuario: Usuario ;
+
   constructor( private http: HttpClient,
-               private router: Router  ) { }
+               private router: Router ) { }
 
   login( formData: any) {
     return this.http.post(`${environment.base_url}/login`, formData).pipe(
@@ -25,8 +28,7 @@ export class UsuarioService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
+    this.limpiarLocalStorage();
     this.router.navigateByUrl('/login');
   }
 
@@ -42,6 +44,7 @@ export class UsuarioService {
   validar(correcto:boolean,incorrecto:boolean): Observable<boolean>{
     const token = localStorage.getItem('token') || '';
     if (token === '') {
+      this.limpiarLocalStorage();
       return of(incorrecto);
     }
 
@@ -50,20 +53,34 @@ export class UsuarioService {
         'x-token':token
       }
       }).pipe(
-        tap( res => {
-          console.log('token renovado');
+        tap( (res: any) => {
+          const { uid, rol, token} = res;
+          localStorage.setItem('token', token);
+          this.usuario = new Usuario(uid, rol);
         }),
         map ( resp => {
           return correcto;
         }),
         catchError ( err => {
           console.warn("Error validar no token",err)
-          localStorage.removeItem('token');
+         this.limpiarLocalStorage();
           return of(incorrecto);
         })
       )
   }
 
+  limpiarLocalStorage(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('rol');
+  }
 
+  get uid(): string {
+    return this.usuario.uid;
+  }
+
+  get rol(): string {
+    return this.usuario.rol;
+  }
 
 }
+

@@ -20,6 +20,21 @@ export class AuthGuard implements CanActivate {
                 tap( resp => {
                   if (!resp) {
                     this.router.navigateByUrl('/login');
+                  }else {
+                    // Si la ruta no es para el rol del token, reenviamos a ruta base de rol del token
+                    if ((next.data['rol'] !== '*') && (this.usuarioService.rol !== next.data['rol'])) { 
+                      switch (this.usuarioService.rol) {
+                        case 'ADMINISTRADOR':
+                          this.router.navigateByUrl('/admin/dashboard');
+                          break;
+                        /*case 'ALUMNO':
+                          this.router.navigateByUrl('/alu/dashboard');
+                          break;
+                        case 'PROFESOR':
+                          this.router.navigateByUrl('/prof/dashboard');
+                          break;*/
+                      }
+                   }
                   }
                 })
               );

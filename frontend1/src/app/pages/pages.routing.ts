@@ -7,12 +7,47 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 
 const routes: Routes = [
-  { path: 'dashboard', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
+
+  { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard], data: {rol: 'ADMINISTRADOR'}, 
     children: [
-    { path: '', component: DashboardComponent},
-    { path: 'usuarios', component: UsuariosComponent},
-    { path: '**', redirectTo: ''}
+    { path: 'dashboard', component: DashboardComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ADMINISTRADOR',
+                                                        titulo: 'Dashboard',
+                                                        breadcrums: []
+                                                      },},
+    { path: 'usuarios', component: UsuariosComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ADMINISTRADOR',
+                                                        titulo: 'Usuarios',
+                                                        breadcrums: [ ],
+                                                      },},
+    /*{ path: 'usuarios/usuario/:uid', component: UsuarioComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ROL_ADMIN',
+                                                        titulo: 'Usuario',
+                                                        breadcrums: [ {titulo: 'Usuarios', url: '/admin/usuarios'} ],
+                                                      },},*/
+    
+    { path: '**', redirectTo: 'dashboard'}
   ]},
+  /*
+  { path: 'prof', component: AdminLayoutComponent, canActivate: [ AuthGuard ], data: {rol: 'ROL_PROFESOR'},
+    children: [
+    { path: 'dashboard', component: DashboardprofComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ROL_PROFESOR',
+                                                        titulo: 'DashboardX',
+                                                        breadcrums: []
+                                                      },},
+    { path: '**', redirectTo: 'dashboard'}
+  ]},
+
+  { path: 'alu', component: AdminLayoutComponent, canActivate: [ AuthGuard ], data: {rol: 'ROL_ALUMNO'}, 
+    children: [
+    { path: 'dashboard', component: DashboardaluComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol:'ROL_ALUMNO',
+                                                        titulo: 'Dashboard',
+                                                        breadcrums: []
+                                                      },},
+    { path: '**', redirectTo: 'dashboard'}
+  ]},*/
 ];
 
 @NgModule({
@@ -22,3 +57,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class PagesRoutingModule { }
+
