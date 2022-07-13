@@ -14,11 +14,13 @@ export class SidebarService {
     { titulo: 'Gestión grupos', icono: 'fa fa-object-group', sub: false, url: '/admin/grupos'},
   ];
   menuAlumno: sidebarItem[]=[
-    { titulo: 'Dashboard Alumno', icono: 'fa fa-tachometer-alt', sub: false, url: '/alu/dashboard'},
+    { titulo: 'Mis notas', icono: 'fa fa-tachometer-alt', sub: false, url: '/usuario/dashboard'},
+    { titulo: 'Evaluar a mi equipo', icono: 'fa fa-users', sub: false, url: '/usuario'},
+    { titulo: 'Mis graficas', icono: 'fa fa-calendar-alt', sub: false, url: '/usuario'},
   ];
   menuProfesor: sidebarItem[]=[
-    { titulo: 'Dashboard Profesor', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/dashboard'},
-    { titulo: 'Asignaturas - Items', icono: 'fa fa-copy', sub: false, url: '/prof/asignaturas'},
+    { titulo: 'Mis grupos', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/dashboard'},
+    { titulo: 'Notas', icono: 'fa fa-copy', sub: false, url: '/prof/asignaturas'},
   ];
   none: sidebarItem[]=[
     { titulo: 'error', icono: 'fa fa-exclamation-triangle', sub: false, url: '/error'}
