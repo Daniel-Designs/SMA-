@@ -47,6 +47,8 @@ export class LoginComponent implements OnInit {
         localStorage.removeItem('email');
       }
       this.waiting = false;
+      //console.log(this.usuarioService.nombre)
+      //localStorage.setItem('nombre', this.usuarioService.nombre);
       switch (this.usuarioService.rol) {
         case 'ADMINISTRADOR':
           this.router.navigateByUrl('/admin/dashboard');

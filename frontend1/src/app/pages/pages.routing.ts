@@ -17,6 +17,8 @@ import { GruposComponent } from './admin/grupos/grupos.component';
 import { GrupoComponent } from './admin/grupo/grupo.component';
 import { RubricaComponent } from './admin/rubrica/rubrica.component';
 import { RubricasComponent } from './admin/rubricas/rubricas.component';
+import { MisGruposComponent } from './prof/mis-grupos/mis-grupos.component';
+import { AsignarNotasComponent } from './prof/asignar-notas/asignar-notas.component';
 
 
 const routes: Routes = [
@@ -89,12 +91,18 @@ const routes: Routes = [
 
   { path: 'prof', component: AdminLayoutComponent, canActivate: [ AuthGuard ], data: {rol: 'PROFESOR'},
     children: [
-    { path: 'dashboard', component: DashboardprofComponent, canActivate: [ AuthGuard ], data: { 
+    { path: 'misGrupos', component: MisGruposComponent, canActivate: [ AuthGuard ], data: { 
                                                         rol: 'PROFESOR',
-                                                        titulo: 'Dashboard Profesor',
+                                                        titulo: 'Grupos Profesor',
                                                         breadcrums: []
                                                       },},
-    { path: '**', redirectTo: 'dashboard'}
+    { path: 'Notas', component: AsignarNotasComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'PROFESOR',
+                                                        titulo: 'Grupos Profesor',
+                                                        breadcrums: []
+                                                      },},
+    
+    { path: '**', redirectTo: 'misGrupos'}
   ]},
 
   { path: 'alu', component: AdminLayoutComponent, canActivate: [ AuthGuard ], data: {rol: 'ALUMNO'}, 

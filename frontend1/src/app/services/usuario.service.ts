@@ -61,6 +61,7 @@ export class UsuarioService {
       tap( (res: any) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('rol', res.rol);
+        localStorage.setItem('nombre', res.nombre);
       })
     );;
   }

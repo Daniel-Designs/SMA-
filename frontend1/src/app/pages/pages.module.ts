@@ -29,6 +29,8 @@ import { GruposComponent } from './admin/grupos/grupos.component';
 import { GrupoComponent } from './admin/grupo/grupo.component';
 import { RubricaComponent } from './admin/rubrica/rubrica.component';
 import { RubricasComponent } from './admin/rubricas/rubricas.component';
+import { MisGruposComponent } from './prof/mis-grupos/mis-grupos.component';
+import { AsignarNotasComponent } from './prof/asignar-notas/asignar-notas.component';
 
 
 
@@ -54,7 +56,9 @@ import { RubricasComponent } from './admin/rubricas/rubricas.component';
     GruposComponent,
     GrupoComponent,
     RubricaComponent,
-    RubricasComponent
+    RubricasComponent,
+    MisGruposComponent,
+    AsignarNotasComponent
   ],
   imports: [
     CommonModule,

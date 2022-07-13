@@ -3,8 +3,9 @@
         <div class="card col-md-10">
             <div class="card-body">
                 <h5 class="card-title">Datos del perfil</h5>
-                <div class="text-success text-right animate__animated animate__faster" [ngClass]="{'animate__fadeIn': showOKD && datosForm.pristine, 'animate__fadeOut' : !(showOKD && datosForm.pristine)}">Datos actualizados</div>
-                <div class="text-center" style="height: 200px;">
+                <!--                 <div class="text-success text-right animate__animated animate__faster" [ngClass]="{'animate__fadeIn': showOKD && datosForm.pristine, 'animate__fadeOut' : !(showOKD && datosForm.pristine)}">Datos actualizados</div>
+ -->
+                <div class="text-center" style="widht: 200px;">
                     <img [src]="imagenUrl" class="img-thumbnail rounded-circle" width="200">
                 </div>
                 <div class="">
@@ -112,7 +113,7 @@
                     <div class="d-flex justify-content-center m-t-10 ">
                         <div class="align-content-center ">
                             <button class="btn btn-warning m-r-20" type="submit " id="enviarpassword" [disabled]="datosPassword.pristine"><i class="fa fa-key m-r-10"></i>Cambiar contraseña</button>
-                            <button class="btn btn-danger " (click)="cancelarPassword()" type="button" id="cancelar" [disabled]="datosPassword.pristine">Cancelar</button>
+                            <button class="btn btn-danger " (click)="cancelarPassword()" type="button" id="cancelarpw" [disabled]="datosPassword.pristine">Cancelar</button>
                         </div>
                     </div>
                 </form>

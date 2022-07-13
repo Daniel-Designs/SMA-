@@ -20,8 +20,8 @@ export class SidebarService {
     { titulo: 'Mis graficas', icono: 'fa fa-calendar-alt', sub: false, url: '/usuario'},
   ];
   menuProfesor: sidebarItem[]=[
-    { titulo: 'Mis grupos', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/dashboard'},
-    { titulo: 'Notas', icono: 'fa fa-copy', sub: false, url: '/prof/asignaturas'},
+    { titulo: 'Mis grupos', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/misGrupos'},
+    { titulo: 'Notas', icono: 'fa fa-copy', sub: false, url: '/prof/Notas'},
   ];
   none: sidebarItem[]=[
     { titulo: 'error', icono: 'fa fa-exclamation-triangle', sub: false, url: '/error'}

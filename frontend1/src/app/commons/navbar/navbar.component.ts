@@ -7,10 +7,13 @@ import { UsuarioService } from '../../services/usuario.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  
+  public nombre: string='';
 
   constructor( private usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
+    this.nombre = localStorage.getItem('nombre')
   }
 
   logout() {

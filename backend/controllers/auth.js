@@ -34,6 +34,7 @@ const login = async(req, res=response) => {
             msg: 'Correcto Login',
             uid:usuarioBD._id,
             rol:usuarioBD.rol,
+            nombre:usuarioBD.nombre,
             token
         });
 

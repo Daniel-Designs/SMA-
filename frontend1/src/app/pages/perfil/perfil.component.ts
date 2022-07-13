@@ -61,10 +61,10 @@ export class PerfilComponent implements OnInit {
 
   // Actualizar datos de usuario
   enviar(): void {
-    if (this.datosForm.invalid) { return; }
+   /* if (this.datosForm.invalid) { return; }
 
     // Actualizamos los datos del formulario y si va bien actualizamos foto
-   /* this.usuarioService.actualizarUsuario( this.usuarioService.uid, this.datosForm.value )
+    this.usuarioService.actualizarUsuario( this.usuarioService.uid, this.datosForm.value )
     .subscribe( res => {
       this.usuarioService.establecerdatos( res['usuario'].nombre, res['usuario'].apellidos, res['usuario'].email );
 
@@ -75,7 +75,7 @@ export class PerfilComponent implements OnInit {
           // Cambiamos la foto del navbar, para eso establecemos la imagen (el nombre de archivo) en le servicio
           this.usuarioService.establecerimagen(res['nombreArchivo']);
           // cambiamos el DOM el objeto que contiene la foto
-          //document.getElementById('fotoperfilnavbar').setAttribute('src', this.usuarioService.imagenURL);
+          document.getElementById('fotoperfilnavbar').setAttribute('src', this.usuarioService.imagenURL);
         }, (err) => {
           const errtext = err.error.msg || 'No se pudo cargar la imagen';
           Swal.fire({icon: 'error', title: 'Oops...', text: errtext});
