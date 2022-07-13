@@ -15,9 +15,9 @@ export class LoginComponent implements OnInit {
   public waiting = false;
 
   public loginForm = this.fb.group({
-    email: ['tonystar@gmail.com'||'', [Validators.required, Validators.email] ],
-    password: ['12345', Validators.required ],
-    remember: [ false ]
+    email: [localStorage.getItem('email') ||'', [Validators.required, Validators.email] ],
+    password: ['', Validators.required ],
+    remember: [ false || localStorage.getItem('email') ]
   });
 
   constructor( private fb: FormBuilder,
