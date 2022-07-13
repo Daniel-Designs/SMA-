@@ -9,6 +9,10 @@ const AsignaturaSchema = Schema({
         type: String,
         require: true
     },
+    numeroEvaluacionesContinuas: {
+        type: Number,
+        default: 1
+    },
     curso: {
         type: Schema.Types.ObjectId,
         ref: 'Curso',

@@ -169,30 +169,6 @@ const actualizarAsignatura = async(req, res) => {
                 msg: 'El curso asignado en la asignatura no existe'
             });
         }
-
-        /*let listaprofesoresinsertar = [];
-        // Si nos ha llegado lista de profesores comprobar que existen y que no hay limpiar campos raros
-        if (profesores) {
-            let listaprofesoresbusqueda = [];
-            // Convertimos el array de objetos en un array con los strings de id de usuario
-            // Creamos un array de objetos pero solo con aquellos que tienen el campo usuario correcto
-            const listaprof = profesores.map(registro => {
-                if (registro.usuario) {
-                    listaprofesoresbusqueda.push(registro.usuario);
-                    listaprofesoresinsertar.push(registro);
-                }
-            });
-            // Comprobamos que los profesores que nos pasan existen, buscamos todos los profesores de la lista
-            const existenProfesores = await Usuario.find().where('_id').in(listaprofesoresbusqueda);
-            if (existenProfesores.length != listaprofesoresbusqueda.length) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Alguno de los profesores indicados en la asignatura no existe o están repetidos'
-                });
-            }
-        }
-        object.profesores = listaprofesoresinsertar;
-        */
         object.curso = curso;
         const asignatura = await Asignatura.findByIdAndUpdate(uid, object, { new: true });
         res.json({

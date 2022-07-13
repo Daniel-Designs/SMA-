@@ -12,11 +12,11 @@ const routes: Routes = [
       { path: '', component: LoginComponent},
     ]
   },
-  { path: 'recovery', component: AuthLayoutComponent, canActivate: [ NoauthGuard] ,
+  /*{ path: 'recovery', component: AuthLayoutComponent, canActivate: [ NoauthGuard] ,
     children: [
       { path: '', component: RecoveryComponent},
     ]
-  },
+  },*/
 ];
 
 @NgModule({

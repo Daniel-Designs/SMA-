@@ -12,7 +12,7 @@
                                     </div>
                                     <div class="form-group col-sm-5">
                                         <select class="form-control" formControlName="curso">
-                                            <option value="">Todos los cursos</option>
+                                            <option value="">Todos las asignaturas</option>
                                             <option *ngFor="let curso of asignatura" value="{{curso.uid}}">
                                                 {{curso.nombrecorto}}
                                             </option>
@@ -49,7 +49,7 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Proyecto</th>
-                                <th>Curso</th>
+                                <th>Asignatura</th>
                                 <th class="text-center">Participantes</th>
                                 <th class="text-center">Acción</th>
                             </tr>

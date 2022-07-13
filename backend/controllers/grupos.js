@@ -35,7 +35,7 @@ const obtenerGrupos = async(req, res = repsonse) => {
                 }
             } else {
                 if (curso !== '') {
-                    query = { curso: curso };
+                    query = { asignatura: curso };
                 } else {
                     query = {};
                 }

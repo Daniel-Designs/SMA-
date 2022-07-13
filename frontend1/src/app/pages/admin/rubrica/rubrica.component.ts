@@ -5,39 +5,41 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Curso } from '../../../models/curso.model';
 import { CursoService } from '../../../services/curso.service';
+import { RubricaService } from 'src/app/services/rubrica.service';
+import { Rubrica } from 'src/app/models/rubrica.model';
+import { Asignatura } from 'src/app/models/asignatura.model';
 
 @Component({
-  selector: 'app-asignatura',
-  templateUrl: './asignatura.component.html',
-  styleUrls: ['./asignatura.component.css']
+  selector: 'app-rubrica',
+  templateUrl: './rubrica.component.html',
+  styleUrls: ['./rubrica.component.css']
 })
-export class AsignaturaComponent implements OnInit {
-
+export class RubricaComponent implements OnInit {
   public datosForm = this.fb.group({
     uid: ['', Validators.required],
-    nombre: ['', Validators.required ],
-    nombrecorto: ['', Validators.required ],
-    curso: ['', Validators.required ],
-    numeroEvaluacionesContinuas:[1,Validators.required ]
+    asignatura: ['', Validators.required ],
+    dimensiones: ['', Validators.required ],
+    valoraciones: ['', Validators.required ]
   });
-  public cursos: Curso[] = [];
-
+  public rubrica: Rubrica;
+  public asignaturas: Asignatura[]=[];
   public submited = false;
   public uid: string = 'nuevo';
 
-  public profesores: {_id: string, usuario: string}[] = [];
-  public alumnos: {_id: string, usuario: string}[] = [];
+
 
   public tab = 1;
   
   constructor(private fb: FormBuilder,
               private asignaturaService: AsignaturaService,
               private cursosService: CursoService,
+              private rubricaService: RubricaService,
               private route: ActivatedRoute,
               private router: Router) { }
 
   ngOnInit(): void {
-    this.cargarCursos();
+    this.cargarRubricas();
+    this.cargarAsignaturas();
     this.uid = this.route.snapshot.params['uid'];
     //console.log(this.uid)
     this.datosForm.get('uid').disable();
@@ -45,47 +47,33 @@ export class AsignaturaComponent implements OnInit {
     this.cargarDatos(this.uid);
   }
 
-  guardarLista( evento: string[], tipo: string) {
-    this.asignaturaService.actualizarListas(this.uid, evento, tipo)
-      .subscribe( res => {
-        
-      }, (err)=> {
-        Swal.fire({icon: 'error', title: 'Oops...', text: 'No se pudo completar la acción, inténtelo más tarde'});
-        return;
-      });
-  }
    
   cargarDatos( uid: string ) {
-    this.submited = false;
+   /* this.submited = false;
     if (this.uid !== 'nuevo') {
-      this.asignaturaService.cargarAsignatura(this.uid)
+      this.rubricaService.cargarRubricas(this.uid)
         .subscribe( res => {
-          if (!res['asignaturas']) {
-            this.router.navigateByUrl('/admin/asignaturas');
+          if (!res['rubricas']) {
+            this.router.navigateByUrl('/admin/rubricas');
             return;
           };
-          console.log(res)
-
-          this.datosForm.get('nombre').setValue(res['asignaturas'].nombre);
-          this.datosForm.get('nombrecorto').setValue(res['asignaturas'].nombrecorto);
-          this.datosForm.get('numeroEvaluacionesContinuas').setValue(res['asignaturas'].numeroEvaluacionesContinuas);
+          
+          this.rubrica = res['rubricas'];
+          this.datosForm.get('asignatura').setValue(this.rubrica.asignatura.nombrecorto);
+          //this.datosForm.get('dimensiones').setValue(this.rubrica.dimensiones);
+          //this.datosForm.get('valoraciones').setValue(this.rubrica.valoraciones);
           //this.datosForm.get('curso').setValue(res['asignaturas'].curso._id);
           this.datosForm.markAsPristine();
-          this.uid = res['asignaturas'].uid;
           this.submited = true;
-          this.profesores = res['asignaturas'].profesores;
-
-          //console.log(this.profesores)
-          this.alumnos = res['asignaturas'].alumnos;
         }, (err) => {
-          this.router.navigateByUrl('/admin/usuarios');
+          this.router.navigateByUrl('/admin/rubricas');
           Swal.fire({icon: 'error', title: 'Oops...', text: 'No se pudo completar la acción, vuelva a intentarlo'});
           return;
         });
     } else {
       this.nuevo();
       
-    }
+    }*/
 
   }
 
@@ -95,9 +83,9 @@ export class AsignaturaComponent implements OnInit {
 
     // Si estamos creando uno nuevo
     if (this.uid === 'nuevo') {
-      this.asignaturaService.crearAsignatura( this.datosForm.value )
+      this.rubricaService.crearRubrica( this.datosForm.value )
         .subscribe( res => {
-          this.uid = res['asignatura'].uid;
+          this.uid = res['rubrica'].uid;
           this.datosForm.get('uid').setValue( this.uid );
           this.datosForm.markAsPristine();
         }, (err) => {
@@ -106,7 +94,7 @@ export class AsignaturaComponent implements OnInit {
         })
     } else {
       // ACtualizamos
-      this.asignaturaService.actualizarAsignatura( this.uid, this.datosForm.value)
+      this.rubricaService.actualizarRubrica( this.uid, this.datosForm.value)
         .subscribe( res => {
           this.datosForm.markAsPristine();
         }, (err) => {
@@ -118,7 +106,7 @@ export class AsignaturaComponent implements OnInit {
   }
 
   nuevo() {
-    this.uid = 'nuevo';
+  /*  this.uid = 'nuevo';
     this.datosForm.reset();
     this.submited = false;
     this.datosForm.get('uid').setValue(this.uid)
@@ -127,9 +115,8 @@ export class AsignaturaComponent implements OnInit {
     this.datosForm.get('nombrecorto').setValue('');
     this.datosForm.get('curso').setValue('');
     this.datosForm.get('numeroEvaluacionesContinuas').setValue(1);
-    this.datosForm.markAsPristine();
-    this.profesores= [];
-    this.alumnos = [];
+    this.datosForm.markAsPristine();*/
+
   }
 
   cancelar() {
@@ -149,11 +136,20 @@ export class AsignaturaComponent implements OnInit {
     return false;
   }
 
-  cargarCursos() {
+  cargarRubricas() {
     // cargamos todos los cursos
-    this.cursosService.cargarCursos(0, '')
+    this.rubricaService.cargarRubricas('')
       .subscribe( res => { 
-        this.cursos = res['cursos'];
+      
+      });
+  }
+
+  cargarAsignaturas() {
+    // cargamos todos los cursos
+    this.asignaturaService.cargarAsignatura2('')
+      .subscribe( res => {
+        this.asignaturas = res['asignaturas'];
+        console.log(this.asignaturas)
       });
   }
 

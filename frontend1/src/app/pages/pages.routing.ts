@@ -15,15 +15,9 @@ import { AsignaturasComponent } from './admin/asignaturas/asignaturas.component'
 import { AsignaturaComponent } from './admin/asignatura/asignatura.component';
 import { GruposComponent } from './admin/grupos/grupos.component';
 import { GrupoComponent } from './admin/grupo/grupo.component';
-/*
-  /perfil                               [*]
-  /admin/* --> páginas de administrador [ROL_ADMIN]
-  /prof/*  --> páginas de profesor      [ROL_PROFESOR]
-  /alu/*   --> páginas de alumno        [ROL_ALUMNO]
+import { RubricaComponent } from './admin/rubrica/rubrica.component';
+import { RubricasComponent } from './admin/rubricas/rubricas.component';
 
-  data --> pasar informacion junto a la ruta para breadcrums y para AuthGuard {rol: 'ROL_ADMIN/ROL_PROFESOR/ROL_ALUMNO/*'}
-
-*/
 
 const routes: Routes = [
 
@@ -80,6 +74,16 @@ const routes: Routes = [
                                                         breadcrums: [ ],
                                                       },},
                                                     
+{ path: 'rubricas', component: RubricasComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ADMINISTRADOR',
+                                                        titulo: 'Rubrica',
+                                                        breadcrums: [ ],
+                                                      },},
+{path: 'rubricas/rubrica/:uid', component: RubricaComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol: 'ADMINISTRADOR',
+                                                        titulo: 'Rubrica',
+                                                        breadcrums: [ ],
+                                                      },},                                                   
     { path: '**', redirectTo: 'dashboard'}
   ]},
 

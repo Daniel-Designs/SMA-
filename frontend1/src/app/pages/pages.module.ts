@@ -27,6 +27,8 @@ import { AsignaturaComponent } from './admin/asignatura/asignatura.component';
 import { SelectusersComponent} from '../commons/selectusers/selectusers.component';
 import { GruposComponent } from './admin/grupos/grupos.component';
 import { GrupoComponent } from './admin/grupo/grupo.component';
+import { RubricaComponent } from './admin/rubrica/rubrica.component';
+import { RubricasComponent } from './admin/rubricas/rubricas.component';
 
 
 
@@ -50,7 +52,9 @@ import { GrupoComponent } from './admin/grupo/grupo.component';
     AsignaturaComponent,
     SelectusersComponent,
     GruposComponent,
-    GrupoComponent
+    GrupoComponent,
+    RubricaComponent,
+    RubricasComponent
   ],
   imports: [
     CommonModule,

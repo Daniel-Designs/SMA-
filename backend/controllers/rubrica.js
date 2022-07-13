@@ -67,7 +67,7 @@ const crearRubrica = async(req, res = response) => {
         res.json({
             ok: true,
             msg: 'Rubrica creada',
-            asignatura
+            rubrica
         });
 
     } catch (error) {

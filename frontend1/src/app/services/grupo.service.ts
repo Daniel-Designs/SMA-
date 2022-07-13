@@ -39,6 +39,7 @@ export class GrupoService {
     } else {
       curso = `&curso=${curso}`;
     }
+    console.log(curso)
     return this.http.get(`${environment.base_url}/grupos/?desde=${desde}${texto}${curso}` , this.cabeceras);
   }
 
