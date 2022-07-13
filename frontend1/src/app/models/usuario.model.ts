@@ -5,14 +5,13 @@ const base_url: string = environment.base_url;
 
 export class Usuario {
 
-    constructor( public uid: string,
-                 public rol: string,
+    constructor( public uid?: string,
+                 public rol?: string,
                  public nombre?: string,
                  public apellidos?: string,
                  public email?: string,
                  public alta?: Date,
-                 public activo?: boolean,
-                 public imagen?: string) {}
+                 public activo?: boolean) {}
 
     /*get imagenUrl(): string {
         // Devolvemos la imagen en forma de peticilon a la API

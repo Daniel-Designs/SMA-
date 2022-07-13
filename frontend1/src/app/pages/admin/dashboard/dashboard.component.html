@@ -1,0 +1,18 @@
+<p>dashboard works!</p>
+
+
+<!-- 
+    <app-pagination 
+    (cambiarPagina)="funcion( $event:number )" 
+
+    [texto]="true/false" 
+    [totalRegistros]="totalregistros"           >= 1
+    [registroActual]="posicionactual+1"         1 < registroActual < totalRegistros 
+    [registrosPorPagina]="registrosporpagina">  >= 1 
+    
+    </app-pagination> 
+-->
+<div class="d-flex justify-content-center">
+    <app-pagination (cambiarPagina)="cambiarPagina( $event )" [totalRegistros]="totalregistros" [registroActual]="posicionactual+1" [registrosPorPagina]="registrosporpagina">
+    </app-pagination>
+</div>

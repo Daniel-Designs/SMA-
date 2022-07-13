@@ -5,44 +5,59 @@ const Curso = require('../models/cursos');
 
 const obtenerCursos = async(req, res = repsonse) => {
 
-    // Paginación
-    const desde = Number(req.query.desde) || 0;
-    const registropp = Number(process.env.DOCSPERPAGE);
-    const id = req.query.id;
-    //console.log(registropp);
-    try {
-        let cursos, total;
-        if (id) {
-            [cursos, total] = await Promise.all([
-                Curso.findById(id),
-                Curso.countDocuments()
-            ]);
-        } else {
-            [cursos, total] = await Promise.all([
-                Curso.find({}).skip(desde).limit(registropp),
-                Curso.countDocuments()
-            ]);
-        }
+   // Paginación
+   const desde = Number(req.query.desde) || 0;
+   const hasta = req.query.hasta || '';
+   let registropp = Number(process.env.DOCSPERPAGE);
+   const id = req.query.id;
+   const texto = req.query.texto;
+   let textoBusqueda = '';
+   if (texto) {
+       textoBusqueda = new RegExp(texto, 'i');
+       //console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+   }
+   if (hasta === 'todos') {
+       registropp = 1000;
+   }
+   //await sleep(2000);
+   try {
+       let cursos, total;
+       if (id) {
+           [cursos, total] = await Promise.all([
+               Curso.findById(id),
+               Curso.countDocuments()
+           ]);
+       } else {
+           if (texto) {
+               [cursos, total] = await Promise.all([
+                   Curso.find({ $or: [{ nombre: textoBusqueda }, { nombrecorto: textoBusqueda }] }).skip(desde).limit(registropp),
+                   Curso.countDocuments({ $or: [{ nombre: textoBusqueda }, { nombrecorto: textoBusqueda }] })
+               ]);
+           } else {
+               [cursos, total] = await Promise.all([
+                   Curso.find({}).skip(desde).limit(registropp),
+                   Curso.countDocuments()
+               ]);
+           }
+       }
+       res.json({
+           ok: true,
+           msg: 'obtenerCurso',
+           cursos,
+           page: {
+               desde,
+               registropp,
+               total
+           }
+       });
 
-
-        res.status(400).json({
-            ok: true,
-            msg: 'obtenerCurso',
-            cursos,
-            page: {
-                desde,
-                registropp,
-                total
-            }
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            ok: false,
-            msg: 'Error al obtener cursos'
-        });
-    }
+   } catch (error) {
+       console.log(error);
+       return res.status(400).json({
+           ok: false,
+           msg: 'Error al obtener cursos'
+       });
+   }
 }
 
 /*

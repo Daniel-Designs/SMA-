@@ -7,32 +7,22 @@ import { sidebarItem } from '../interfaces/sidebar.interface';
 export class SidebarService {
 
   menuAdmin: sidebarItem[] =[
-    { titulo: 'Dashboard Admin', icono: 'mdi mdi-view-dashboard', sub: false, url: '/dashboard'},
-    { titulo: 'Gestión usuarios', icono: 'mdi mdi-arrow-down', sub: true, subMenu: [
-      { titulo: 'Usuarios', icono: 'mdi mdi-numeric-1-box-outline', url: '/dashboard/usuarios'},
-      { titulo: 'Opcion 2', icono: 'mdi mdi-numeric-2-box-outline', url: '/dashboard/dos'}
-    ]},
-    { titulo: 'Otro', icono: 'mdi mdi-multiplication', sub: false, url: '/dashboard/otro'},
+    { titulo: 'Dashboard Admin', icono: 'fa fa-tachometer-alt', sub: false, url: '/admin/dashboard'},
+    { titulo: 'Gestión usuarios', icono: 'fa fa-users', sub: false, url: '/admin/usuarios'},
+    { titulo: 'Gestión cursos', icono: 'fa fa-calendar-alt', sub: false, url: '/admin/cursos'},
+    { titulo: 'Gestión asignaturas', icono: 'fa fa-sticky-note', sub: false, url: '/admin/asignaturas'},
+    { titulo: 'Gestión grupos', icono: 'fa fa-object-group', sub: false, url: '/admin/grupos'},
   ];
   menuAlumno: sidebarItem[]=[
-    { titulo: 'Dashboard Alumno', icono: 'mdi mdi-view-dashboard', sub: false, url: '/dashboard'},
-    { titulo: 'Usuarios', icono: 'mdi mdi-account', sub: false, url: '/dashboard/usuarios'},
-    { titulo: 'Otro', icono: 'mdi mdi-multiplication', sub: false, url: '/dashboard/otro'},
-    { titulo: 'Submenu', icono: 'mdi mdi-arrow-down', sub: true, subMenu: [
-      { titulo: 'Opcion 1', icono: 'mdi mdi-numeric-1-box-outline', url: '/dashboard/usuarios'},
-      { titulo: 'Opcion 2', icono: 'mdi mdi-numeric-2-box-outline', url: '/dashboard/dos'}
-    ]},
+    { titulo: 'Dashboard Alumno', icono: 'fa fa-tachometer-alt', sub: false, url: '/alu/dashboard'},
   ];
   menuProfesor: sidebarItem[]=[
-    { titulo: 'Dashboard Profesor', icono: 'mdi mdi-view-dashboard', sub: false, url: '/dashboard'},
-    { titulo: 'Usuarios', icono: 'mdi mdi-account', sub: false, url: '/dashboard/usuarios'},
-    { titulo: 'Otro', icono: 'mdi mdi-multiplication', sub: false, url: '/dashboard/otro'},
-    { titulo: 'Submenu', icono: 'mdi mdi-arrow-down', sub: true, subMenu: [
-      { titulo: 'Opcion 1', icono: 'mdi mdi-numeric-1-box-outline', url: '/dashboard/uno'},
-      { titulo: 'Opcion 2', icono: 'mdi mdi-numeric-2-box-outline', url: '/dashboard/dos'}
-    ]},
+    { titulo: 'Dashboard Profesor', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/dashboard'},
+    { titulo: 'Asignaturas - Items', icono: 'fa fa-copy', sub: false, url: '/prof/asignaturas'},
   ];
-
+  none: sidebarItem[]=[
+    { titulo: 'error', icono: 'fa fa-exclamation-triangle', sub: false, url: '/error'}
+  ]
   constructor() { }
   getMenu(){
     const rol = localStorage.getItem('rol');

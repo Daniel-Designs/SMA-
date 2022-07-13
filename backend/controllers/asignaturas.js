@@ -5,108 +5,118 @@ const Asignatura = require('../models/asignaturas');
 const Curso = require('../models/cursos');
 const Usuario = require('../models/usuarios');
 
+const {infoToken} = require('../helpers/infotoken')
+
 
 const obtenerAsignaturas = async(req, res = repsonse) => {
 
-  
-    const desde = Number(req.query.desde) || 0;
-    const registropp = Number(process.env.DOCSPERPAGE);
-    const id = req.query.id;
+ // Paginación
+ const desde = Number(req.query.desde) || 0;
+ const registropp = Number(process.env.DOCSPERPAGE);
+ const id = req.query.id;
+ const idprof = req.query.idprof || '';
+ const textos = req.query.texto || '';
+ const curso = req.query.curso || '';
 
-    try {
+ try {
+
+     let asignaturas, total;
+     if (id) {
+         [asignaturas, total] = await Promise.all([
+             Asignatura.findById(id).populate('curso'), //.populate('profesores.usuario', '-password -alta -__v'),                
+             Asignatura.countDocuments()
+         ]);
 
 
-        let asignaturas, total;
-        if (id) {
-            [asignaturas, total] = await Promise.all([
-                Asignatura.findById(id).populate('curso').populate('profesores.usuario', '-password -alta -__v').populate('alumnos.usuario', '-password -alta -__v'),
-                Asignatura.countDocuments()
-            ]);
-        } else {
-            [asignaturas, total] = await Promise.all([
-                Asignatura.find({}).skip(desde).limit(registropp).populate('curso').populate('profesores.usuario', '-password -alta -__v').populate('alumnos.usuario', '-password -alta -__v'),
-                Asignatura.countDocuments()
-            ]);
-        }
+     } else {
+         // {curso:'', {$or: {nombre : '', nombrecorto:''}, 'profesores.usuario':idprof}}}
 
-        res.json({
-            ok: true,
-            msg: 'obtenerAsignaturas',
-            asignaturas,
-            page: {
-                desde,
-                registropp,
-                total
-            }
-        });
+         let query = {};
 
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({
-            ok: false,
-            msg: 'Error al obtener asignaturas'
-        });
-    }
+         if (textos !== '') {
+             texto = new RegExp(textos, 'i');
+             if (curso !== '') {
+                 if (idprof !== '') {
+                     // texto, curso e idprof
+                     query = { curso: curso, $or: [{ nombre: texto }, { nombrecorto: texto }], 'profesores.usuario': idprof };
+                 } else {
+                     // texto, curso
+                     query = { curso: curso, $or: [{ nombre: texto }, { nombrecorto: texto }] };
+                 }
+             } else {
+                 if (idprof !== '') {
+                     // texto e idprof
+                     query = { $or: [{ nombre: texto }, { nombrecorto: texto }], 'profesores.usuario': idprof };
+                 } else {
+                     // texto
+                     query = { $or: [{ nombre: texto }, { nombrecorto: texto }] };
+                 }
+             }
+         } else {
+             if (curso !== '') {
+                 if (idprof !== '') {
+                     // curso e idprof
+                     query = { curso: curso, 'profesores.usuario': idprof };
+                 } else {
+                     query = { curso: curso }
+                 }
+             } else {
+                 if (idprof !== '') {
+                     query = { 'profesores.usuario': idprof };
+                 } else {
+                     query = {};
+                 }
+             }
+         }
+
+         [asignaturas, total] = await Promise.all([
+             Asignatura.find(query).skip(desde).limit(registropp).populate('curso'), //.populate('profesores.usuario', '-password -alta -__v'),
+             Asignatura.countDocuments(query)
+         ]);
+
+     }
+
+     res.json({
+         ok: true,
+         msg: 'obtenerAsignaturas',
+         asignaturas,
+         page: {
+             desde,
+             registropp,
+             total
+         }
+     });
+
+ } catch (error) {
+     console.log(error);
+     return res.status(400).json({
+         ok: false,
+         msg: 'Error al obtener asignaturas'
+     });
+ }
 }
 
 const crearAsignatura = async(req, res = response) => {
 
-    const { curso, profesores,alumnos } = req.body;
+   // De lo que nos manden extraemos curso, profesores y alumnos
+    // profesores y alumnos no se van a insertar al crear
+    const { curso, profesores, alumnos, ...object } = req.body;
+
+    // Solo puede crear usuarios un admin
+    const token = req.header('x-token');
+    // lo puede actualizar un administrador o el propio usuario del token
+    if (!(infoToken(token).rol === 'ADMINISTRADOR')) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'No tiene permisos para crear asignatura',
+        });
+    }
 
     try {
 
-        const existeCurso = await Curso.findById(curso);
-        if (!existeCurso) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'El curso asignado en la asignatura no existe'
-            });
-        }
-
-        let listaprofesoresinsertar = [];
-        let listaalumnosinsertar = [];
-        
-        if (profesores || alumnos) {
-            let listaprofesoresbusqueda = [];
-            let listaalumnosbusqueda = [];
-            // Convertimos el array de objetos en un array con los strings de id de usuario
-            // Creamos un array de objetos pero solo con aquellos que tienen el campo usuario correcto
-            const listaprof = profesores.map(registro => {
-                if (registro.usuario) {
-                    listaprofesoresbusqueda.push(registro.usuario);
-                    listaprofesoresinsertar.push(registro);
-                }
-            }); 
-            const listalumos = alumnos.map(registro => {
-                if (registro.usuario) {
-                    listaalumnosbusqueda.push(registro.usuario);
-                    listaalumnosinsertar.push(registro);
-                }
-            });
-
-            // Comprobamos que los profesores que nos pasan existen, buscamos todos los profesores de la lista
-            const existenProfesores = await Usuario.find().where('_id').in(listaprofesoresbusqueda);
-            if (existenProfesores.length != listaprofesoresbusqueda.length) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Alguno de los profesores indicados en la asignatura no existe o están repetidos'
-                });
-            }
-
-            const existenAlumnos = await Usuario.find().where('_id').in(listaprofesoresbusqueda);
-            if (existenAlumnos.length != listaalumnosbusqueda.length) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Alguno de los alumnos indicados en la asignatura no existe o están repetidos'
-                });
-            }
-
-        }
-
-        const asignatura = new Asignatura(req.body);
-        // Sustituir el campo profesores por la lista de profesores preparada
-        asignatura.profesores = listaprofesoresinsertar;
-        asignatura.alumnos = listaalumnosinsertar;
+        const asignatura = new Asignatura(object);
+        // Insertamos el curso que ya está comprobado en el body
+        asignatura.curso = curso;
         // Almacenar en BD
         await asignatura.save();
 
@@ -127,8 +137,18 @@ const crearAsignatura = async(req, res = response) => {
 
 const actualizarAsignatura = async(req, res) => {
 
-    const { profesores, curso, alumnos } = req.body;
+    const { profesores, alumnos, curso, ...object } = req.body;
     const uid = req.params.id;
+
+    // Solo puede crear usuarios un admin
+    const token = req.header('x-token');
+    // lo puede actualizar un administrador o el propio usuario del token
+    if (!(infoToken(token).rol === 'ADMINISTRADOR')) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'No tiene permisos para modificar asignatura',
+        });
+    }
 
     try {
 
@@ -150,7 +170,7 @@ const actualizarAsignatura = async(req, res) => {
             });
         }
 
-        let listaprofesoresinsertar = [];
+        /*let listaprofesoresinsertar = [];
         // Si nos ha llegado lista de profesores comprobar que existen y que no hay limpiar campos raros
         if (profesores) {
             let listaprofesoresbusqueda = [];
@@ -171,33 +191,9 @@ const actualizarAsignatura = async(req, res) => {
                 });
             }
         }
-
-        let listaalumnosinsertar = [];
-        // Si nos ha llegado lista de profesores comprobar que existen y que no hay limpiar campos raros
-        if (profesores) {
-            let listaalumnosbusqueda = [];
-            // Convertimos el array de objetos en un array con los strings de id de usuario
-            // Creamos un array de objetos pero solo con aquellos que tienen el campo usuario correcto
-            const listalum = alumnos.map(registro => {
-                if (registro.usuario) {
-                    listaalumnosbusqueda.push(registro.usuario);
-                    listaalumnosinsertar.push(registro);
-                }
-            });
-            // Comprobamos que los profesores que nos pasan existen, buscamos todos los profesores de la lista
-            const existenAlumnos = await Usuario.find().where('_id').in(listaalumnosbusqueda);
-            if (existenAlumnos.length != listaalumnosbusqueda.length) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Alguno de los Alumnos indicados en la asignatura no existe o están repetidos'
-                });
-            }
-        }
-
-        const object = req.body;
         object.profesores = listaprofesoresinsertar;
-        object.profesores = listaalumnosinsertar;
-
+        */
+        object.curso = curso;
         const asignatura = await Asignatura.findByIdAndUpdate(uid, object, { new: true });
         res.json({
             ok: true,
@@ -209,7 +205,7 @@ const actualizarAsignatura = async(req, res) => {
         console.log(error);
         return res.status(400).json({
             ok: false,
-            msg: 'Error creando asignatura'
+            msg: 'Error actualizando asignatura'
         });
     }
 }
@@ -217,6 +213,16 @@ const actualizarAsignatura = async(req, res) => {
 const borrarAsignatura = async(req, res = response) => {
 
     const uid = req.params.id;
+
+    // Solo puede crear usuarios un admin
+    const token = req.header('x-token');
+    // lo puede actualizar un administrador o el propio usuario del token
+    if (!(infoToken(token).rol === 'ADMINISTRADOR')) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'No tiene permisos para eliminar asignatura',
+        });
+    }
 
     try {
         // Comprobamos si existe el asignatura que queremos borrar
@@ -245,6 +251,51 @@ const borrarAsignatura = async(req, res = response) => {
     }
 }
 
+const actualizarLista = async(req, res) => {
+
+    const id = req.params.id;
+    const tipo = req.body.tipo;
+    const tiposPermitidos = ['profesores', 'alumnos'];
+    const lista = req.body.lista;
+
+    // Solo puede crear usuarios un admin
+    const token = req.header('x-token');
+    // lo puede actualizar un administrador o el propio usuario del token
+    if (!(infoToken(token).rol === 'ADMINISTRADOR')) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'No tiene permisos para modificar lista de profesores/alumnos de asignatura',
+        });
+    }
+
+    if (!tiposPermitidos.includes(tipo)) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'Tipo no permitido',
+            tipo
+        });
+    }
+    ['uid', 'uid', 'uid']
+    // Antes de insertar, limpiamos la lista de posibles duplicados o no existentes ['1','2','3'] -> [{usuario:'1'},{usuario:'3'}]
+    let listaInsertar = [];
+    try {
+        const usuarios = await Usuario.find({ _id: { $in: lista } }, { _id: 0, 'usuario': '$_id' });
+        let objetc;
+        if (tipo === 'alumnos') { object = { alumnos: usuarios }; } // { alumnos: [{usuario:'1'},{usuario:'3'}]}
+        if (tipo === 'profesores') { object = { profesores: usuarios }; } // { profesores: : [{usuario:'1'},{usuario:'3'}]}
+        const asignatura = await Asignatura.findByIdAndUpdate(id, object, { new: true });
+        res.json({
+            ok: true,
+            msg: `Actualizar lista de ${tipo}`,
+            asignatura
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: `Error al actualizar listas`
+        });
+    }
+}
 
 
-module.exports = { obtenerAsignaturas, crearAsignatura, actualizarAsignatura, borrarAsignatura }
+module.exports = { obtenerAsignaturas, crearAsignatura, actualizarAsignatura, borrarAsignatura, actualizarLista }

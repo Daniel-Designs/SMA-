@@ -18,6 +18,44 @@ export class UsuarioService {
   constructor( private http: HttpClient,
                private router: Router ) { }
 
+              nuevoUsuario ( data: Usuario) {
+                return this.http.post(`${environment.base_url}/usuarios/`, data, this.cabeceras);
+              }
+            
+              actualizarUsuario ( uid: string, data: Usuario) {
+                return this.http.put(`${environment.base_url}/usuarios/${uid}`, data, this.cabeceras);
+              }
+            
+              cambiarPassword( uid: string, data: any) {
+                return this.http.put(`${environment.base_url}/usuarios/np/${uid}`, data, this.cabeceras);
+              }
+              
+            
+              cargarUsuario( uid: string) {
+                if (!uid) { uid = '';}
+                return this.http.get(`${environment.base_url}/usuarios/?id=${uid}` , this.cabeceras);
+              }
+            
+              cargarUsuarios( desde: number, textoBusqueda?: string ): Observable<object> {
+                if (!desde) { desde = 0;}
+                if (!textoBusqueda) {textoBusqueda = '';}
+                return this.http.get(`${environment.base_url}/usuarios/?desde=${desde}&texto=${textoBusqueda}` , this.cabeceras);
+              }
+
+              cargarListaUsuarios ( uids: string[]) {
+                const data = { lista: uids };
+                return this.http.post(`${environment.base_url}/usuarios/lista` , data, this.cabeceras);
+              }
+              cargarUsuariosRol ( rol: string, uids: string[]) {
+                const data = { lista: uids };
+                return this.http.post(`${environment.base_url}/usuarios/rol/${rol}`, data, this.cabeceras);
+              }
+            
+              borrarUsuario( uid: string) {
+                if (!uid || uid === null) {uid = 'a'; }
+                return this.http.delete(`${environment.base_url}/usuarios/${uid}` , this.cabeceras);
+              }            
+
   login( formData: any) {
     return this.http.post(`${environment.base_url}/login`, formData).pipe(
       tap( (res: any) => {
@@ -73,14 +111,47 @@ export class UsuarioService {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
   }
+  establecerimagen(nueva: string): void {
+    //this.usuario.imagen = nueva;
+  }
+
+  establecerdatos(nombre: string, apellidos: string, email: string): void {
+    this.usuario.nombre = nombre;
+    this.usuario.apellidos = apellidos;
+    this.usuario.email = email;
+  }
+  
+  get cabeceras() {
+    return {
+      headers: {
+        'x-token': this.token
+      }};
+  }
+
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
 
   get uid(): string {
     return this.usuario.uid;
   }
 
   get rol(): string {
-    return this.usuario.rol;
+    return this.usuario['rol'];
   }
+
+  get nombre(): string{
+    return this.usuario.nombre;
+  }
+
+  get apellidos(): string{
+    return this.usuario.apellidos;
+  }
+
+  get email(): string{
+    return this.usuario.email;
+  }
+
 
 }
 

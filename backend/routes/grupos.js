@@ -3,7 +3,7 @@ Ruta base: /api/grupos
 */
 
 const { Router } = require('express');
-const { obtenerGrupos, crearGrupo, actualizarGrupo, borrarGrupo } = require('../controllers/grupos');
+const { obtenerGrupos, crearGrupo, actualizarGrupo, borrarGrupo, actualizarLista} = require('../controllers/grupos');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validarCampos');
 const { validarJWT } = require('../middleware/validarJWT');
@@ -31,5 +31,11 @@ router.delete('/:id', [
     check('id', 'El identificador no es válido').isMongoId(),
     validarCampos,
 ], borrarGrupo);
+
+router.put('/lista/:id', [
+    validarJWT,
+    check('id', 'El identificador no es válido').isMongoId(),
+    validarCampos,
+], actualizarLista);
 
 module.exports = router;
