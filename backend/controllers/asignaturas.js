@@ -273,5 +273,48 @@ const actualizarLista = async(req, res) => {
     }
 }
 
+/*const asignaturasProfesor = async(req, res = response)=>{
 
+ // Paginación
+ const desde = Number(req.query.desde) || 0;
+ const registropp = Number(process.env.DOCSPERPAGE);
+ const idProfesor = req.id;
+ const idprof = req.query.idprof || '';
+ const textos = req.query.texto || '';
+ const curso = req.query.curso || '';
+
+ try {
+
+     let asignaturas, total, profesor;
+     if (idProfesor) {
+         [profesor, total] = await Promise.all([
+             Usuario.findById(id).populate('curso'), //.populate('profesores.usuario', '-password -alta -__v'),                
+             Asignatura.countDocuments()
+         ]);
+
+
+     }
+
+     res.json({
+         ok: true,
+         msg: 'obtenerAsignaturas',
+         asignaturas,
+         page: {
+             desde,
+             registropp,
+             total
+         }
+     });
+
+ } catch (error) {
+     console.log(error);
+     return res.status(400).json({
+         ok: false,
+         msg: 'Error al obtener asignaturas del profesor'
+     });
+ }
+
+    
+}
+*/
 module.exports = { obtenerAsignaturas, crearAsignatura, actualizarAsignatura, borrarAsignatura, actualizarLista }

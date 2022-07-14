@@ -31,6 +31,9 @@ import { RubricaComponent } from './admin/rubrica/rubrica.component';
 import { RubricasComponent } from './admin/rubricas/rubricas.component';
 import { MisGruposComponent } from './prof/mis-grupos/mis-grupos.component';
 import { AsignarNotasComponent } from './prof/asignar-notas/asignar-notas.component';
+import { MisNotasComponent } from './alu/mis-notas/mis-notas.component';
+import { EvaluarComponent } from './alu/evaluar/evaluar.component';
+import { GraficasComponent } from './alu/graficas/graficas.component';
 
 
 
@@ -58,7 +61,10 @@ import { AsignarNotasComponent } from './prof/asignar-notas/asignar-notas.compon
     RubricaComponent,
     RubricasComponent,
     MisGruposComponent,
-    AsignarNotasComponent
+    AsignarNotasComponent,
+    MisNotasComponent,
+    EvaluarComponent,
+    GraficasComponent
   ],
   imports: [
     CommonModule,

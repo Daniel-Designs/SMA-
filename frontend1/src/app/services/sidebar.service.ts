@@ -15,9 +15,9 @@ export class SidebarService {
     { titulo: 'Gestión Rubricas', icono: 'fa fa-object-group', sub: false, url: '/admin/rubricas'},
   ];
   menuAlumno: sidebarItem[]=[
-    { titulo: 'Mis notas', icono: 'fa fa-tachometer-alt', sub: false, url: '/usuario/dashboard'},
-    { titulo: 'Evaluar a mi equipo', icono: 'fa fa-users', sub: false, url: '/usuario'},
-    { titulo: 'Mis graficas', icono: 'fa fa-calendar-alt', sub: false, url: '/usuario'},
+    { titulo: 'Mis notas', icono: 'fa fa-tachometer-alt', sub: false, url: '/alu/misNotas'},
+    { titulo: 'Evaluar a mi equipo', icono: 'fa fa-users', sub: false, url: '/alu/evaluar'},
+    { titulo: 'Mis graficas', icono: 'fa fa-calendar-alt', sub: false, url: '/alu/misGraficas'},
   ];
   menuProfesor: sidebarItem[]=[
     { titulo: 'Mis grupos', icono: 'fa fa-tachometer-alt', sub: false, url: '/prof/misGrupos'},

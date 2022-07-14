@@ -19,6 +19,9 @@ import { RubricaComponent } from './admin/rubrica/rubrica.component';
 import { RubricasComponent } from './admin/rubricas/rubricas.component';
 import { MisGruposComponent } from './prof/mis-grupos/mis-grupos.component';
 import { AsignarNotasComponent } from './prof/asignar-notas/asignar-notas.component';
+import { MisNotasComponent } from './alu/mis-notas/mis-notas.component';
+import { GraficasComponent } from './alu/graficas/graficas.component';
+import { EvaluarComponent } from './alu/evaluar/evaluar.component';
 
 
 const routes: Routes = [
@@ -70,7 +73,7 @@ const routes: Routes = [
                                                         titulo: 'Grupo',
                                                         breadcrums: [ {titulo: 'Grupos', url: '/admin/grupos'} ],
                                                       },},
-                                                      { path: 'cursos', component: CursosComponent, canActivate: [ AuthGuard ], data: { 
+    { path: 'cursos', component: CursosComponent, canActivate: [ AuthGuard ], data: { 
                                                         rol: 'ADMINISTRADOR',
                                                         titulo: 'Cursos',
                                                         breadcrums: [ ],
@@ -98,7 +101,7 @@ const routes: Routes = [
                                                       },},
     { path: 'Notas', component: AsignarNotasComponent, canActivate: [ AuthGuard ], data: { 
                                                         rol: 'PROFESOR',
-                                                        titulo: 'Grupos Profesor',
+                                                        titulo: 'Notas Profesor',
                                                         breadcrums: []
                                                       },},
     
@@ -107,12 +110,23 @@ const routes: Routes = [
 
   { path: 'alu', component: AdminLayoutComponent, canActivate: [ AuthGuard ], data: {rol: 'ALUMNO'}, 
     children: [
-    { path: 'dashboard', component: DashboardaluComponent, canActivate: [ AuthGuard ], data: { 
+    { path: 'misNotas', component: MisNotasComponent, canActivate: [ AuthGuard ], data: { 
                                                         rol:'ALUMNO',
-                                                        titulo: 'Dashboard Alumno',
+                                                        titulo: 'Mis Notas ',
+                                                        breadcrums: []
+                                                      },},  
+    
+   { path: 'misGraficas', component: GraficasComponent , canActivate: [ AuthGuard ], data: { 
+                                                        rol:'ALUMNO',
+                                                        titulo: ' Mis graficas',
+                                                        breadcrums: []
+                                                      },}, 
+    { path: 'evaluar', component: EvaluarComponent, canActivate: [ AuthGuard ], data: { 
+                                                        rol:'ALUMNO',
+                                                        titulo: 'Evaluacion',
                                                         breadcrums: []
                                                       },},
-    { path: '**', redirectTo: 'dashboard'}
+    { path: '**', redirectTo: 'misNotas'}
   ]},
 
 
